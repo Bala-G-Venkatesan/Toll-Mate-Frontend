@@ -14,7 +14,7 @@ let initialState = {
 }
 
 
-let fetchSourceDestinationTollsAndCoordinates=createAsyncThunk('toll/fetchSourceDestinationTollsAndCoordinates',async ({source,destination})=>
+let fetchSourceDestinationTollsAndCoordinates=createAsyncThunk('toll/fetchSourceDestinationTollsAndCoordinates',async ({source,destination,vehicleType})=>
 {
     console.log(process.env);
     let sourceUrl = `https://geocode.maps.co/search?q=${source}&api_key=65dacbfb919bf588134874bsi8bae6b`;
@@ -31,9 +31,9 @@ let fetchSourceDestinationTollsAndCoordinates=createAsyncThunk('toll/fetchSource
       `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248b135f3df0f6548b3905522ce5cf93088&start=${sourceResponse.data[0].lon},${sourceResponse.data[0].lat}&end=${destinationResponse.data[0].lon},${destinationResponse.data[0].lat}`
     );
     
-    let foundTollData=await axios.post('http://localhost:2000/toll/get',{source:source,destination:destination})
-
-    return {coordinates:coordinates.data.features[0].geometry.coordinates,foundTollData:foundTollData.data.foundTollData};
+    let foundTollData=await axios.post('http://localhost:2000/toll/get',{source:source,destination:destination,vehicleType:vehicleType})
+    console.log(foundTollData)
+    return {coordinates:coordinates.data.features[0].geometry.coordinates,foundTollData:{...foundTollData.data.foundTollData,tollCost:foundTollData.data}};
 })
 
 
