@@ -15,8 +15,8 @@ const AdminActions = () => {
 
     let [source,setSource]=useState("")
     let [destination,setDestination]=useState("")
-    let [noOfTolls,setNoOfTolls]=useState("")
-    let [distance,setDistance]=useState("")
+    let [noOfTolls,setNoOfTolls]=useState(null)
+    let [distance,setDistance]=useState(null)
 
 
     let handleSelection=(data)=>
@@ -55,27 +55,66 @@ const AdminActions = () => {
 
   return (
     <main>
-        <input type="text" value={source} onChange={(e)=>setSource(e.target.value)}/>
-        <br />
-        <input type="text" value={destination} onChange={(e)=>setDestination(e.target.value)}/>
-        <input type="text" value={noOfTolls} onChange={(e)=>setNoOfTolls(parseInt(e.target.value))}/>
-        <input type="text" value={distance} onChange={(e)=>setDistance(parseFloat(e.target.value))}/>
-        <div className="auto-suggest">
-            <input type="text" value={autoSuggestInput} onChange={(e)=>setAutoSuggestInput(e.target.value)} onFocus={()=>setActivateSuggestions(true)}/>
-            <div className="suggestions max-h-[500px] overflow-scroll overflow-x-hidden">
-                {activateSuggestions && autoSuggestData.slice().sort((a,b)=>
-                {
-                    return a.tollName.localeCompare(b.tollName)
-                }).map((items,idx)=>
-                {
-                    return <p key={idx} onClick={()=>handleSelection(items)} className='cursor-pointer'>{items.tollName}</p>
-                })}
-            </div>
+      <input
+        type="text"
+        value={source}
+        placeholder="Source"
+        onChange={(e) => setSource(e.target.value)}
+        className="h-[35px] border-[1px] mb-1 outline-none px-[5px] focus:border-blue-500 rounded-sm"
+      />
+      <br />
+      <input
+        type="text"
+        value={destination}
+        placeholder="Destination"
+        onChange={(e) => setDestination(e.target.value)}
+        className="h-[35px] border-[1px] mb-1 outline-none px-[5px] focus:border-blue-500 rounded-sm"
+      />
+      <input
+        type="number"
+        value={noOfTolls}
+        placeholder="No Of Tolls"
+        onChange={(e) => setNoOfTolls(parseInt(e.target.value))}
+        className="h-[35px] border-[1px] mb-1 outline-none px-[5px] focus:border-blue-500 rounded-sm"
+      />
+      <input
+        type="number"
+        value={distance}
+        placeholder="Distance (In km)"
+        onChange={(e) => setDistance(parseFloat(e.target.value))}
+        className="h-[35px] border-[1px] mb-1 outline-none px-[5px] focus:border-blue-500 rounded-sm"
+      />
+      <div className="auto-suggest">
+        <input
+          type="text"
+          value={autoSuggestInput}
+          onChange={(e) => setAutoSuggestInput(e.target.value)}
+          onFocus={() => setActivateSuggestions(true)}
+          className="h-[35px] border-[1px] mb-1 outline-none px-[5px] focus:border-blue-500 rounded-sm"
+        />
+        <div className="suggestions max-h-[500px] overflow-scroll overflow-x-hidden">
+          {activateSuggestions &&
+            autoSuggestData
+              .slice()
+              .sort((a, b) => {
+                return a.tollName.localeCompare(b.tollName);
+              })
+              .map((items, idx) => {
+                return (
+                  <p
+                    key={idx}
+                    onClick={() => handleSelection(items)}
+                    className="cursor-pointer"
+                  >
+                    {items.tollName}
+                  </p>
+                );
+              })}
         </div>
-        <button onClick={handleSubmit}>Submit</button>
-        
+      </div>
+      <button onClick={handleSubmit}>Submit</button>
     </main>
-  )
+  );
 }
 
 

@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
+import AxiosInstance from '../AxiosInstance'
 
 
 let initialState = {
@@ -16,31 +17,43 @@ let initialState = {
 
 let fetchSourceDestinationTollsAndCoordinates=createAsyncThunk('toll/fetchSourceDestinationTollsAndCoordinates',async ({source,destination,vehicleType})=>
 {
-    console.log(process.env);
-    let sourceUrl = `https://geocode.maps.co/search?q=${source}&api_key=65dacbfb919bf588134874bsi8bae6b`;
-    let destinationUrl = `https://geocode.maps.co/search?q=${destination}&api_key=65dadea571b76600105954ahn0963ca`;
-    let sourceResponse=await axios.get(sourceUrl,{"content-type":"application/json"})
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-    let destinationResponse=await axios.get(destinationUrl,{"content-type":"application/json"})
+    let foundTollData=await AxiosInstance.post('/toll/get',{source:source,destination:destination,vehicleType:vehicleType})
+    if(foundTollData.data.foundTollData)
+    {
+        let sourceUrl = `https://geocode.maps.co/search?q=${source}&api_key=65dacbfb919bf588134874bsi8bae6b`;
+        let destinationUrl = `https://geocode.maps.co/search?q=${destination}&api_key=65dadea571b76600105954ahn0963ca`;
+        let sourceResponse = await axios.get(sourceUrl, {
+          "content-type": "application/json",
+        });
+        await new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve();
+          }, 1000);
+        });
+        let destinationResponse = await axios.get(destinationUrl, {
+          "content-type": "application/json",
+        });
+
+        let coordinates = await axios.get(
+          `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248b135f3df0f6548b3905522ce5cf93088&start=${sourceResponse.data[0].lon},${sourceResponse.data[0].lat}&end=${destinationResponse.data[0].lon},${destinationResponse.data[0].lat}`
+        );
+        return {
+          coordinates: coordinates.data.features[0].geometry.coordinates,
+          foundTollData: { ...foundTollData.data.foundTollData },
+        };
+    }
+    else 
+    {
+        return foundTollData.data
+    }
     
-    let coordinates = await axios.get(
-      `https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248b135f3df0f6548b3905522ce5cf93088&start=${sourceResponse.data[0].lon},${sourceResponse.data[0].lat}&end=${destinationResponse.data[0].lon},${destinationResponse.data[0].lat}`
-    );
-    
-    let foundTollData=await axios.post('http://localhost:2000/toll/get',{source:source,destination:destination,vehicleType:vehicleType})
-    console.log(foundTollData)
-    return {coordinates:coordinates.data.features[0].geometry.coordinates,foundTollData:{...foundTollData.data.foundTollData,tollCost:foundTollData.data}};
 })
 
 
 let createToll=createAsyncThunk('toll/createToll',async (data)=>
 {
     console.log("ANDREW TATE",data)
-    let response=await axios.post('http://localhost:2000/toll/create',data)
+    let response=await AxiosInstance.post('/toll/create',data)
     console.log(response)
 })
 

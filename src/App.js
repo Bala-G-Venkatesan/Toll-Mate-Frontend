@@ -8,11 +8,13 @@ function App() {
   return (
     <div className="App bg-gray-500 min-h-screen overflow-x-hidden">
        <Routes>
-         <Route path='' element={<Home/>}/>
+         <Route path='/' element={<Home/>}/>
+         <Route path='/admin' element={<AdminActions/>}/>
        </Routes>
     </div>
   )
 }
+
 
 
 export default App;
