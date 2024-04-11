@@ -1,6 +1,5 @@
 import './App.css';
 import {Routes,Route} from 'react-router-dom'
-import PrimaryMap from './components/PrimaryMap';
 import AdminActions from './components/AdminActions';
 import Home from './pages/Home';
 
