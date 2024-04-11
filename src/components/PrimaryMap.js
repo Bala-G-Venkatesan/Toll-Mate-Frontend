@@ -18,7 +18,6 @@ const PrimaryMap = () => {
     let [vehicleType,setVehicleType]=useState('')
     let [adjustedCoordinates,setAdjustedCoordinates]=useState([])
     let position = [28.7041, 77.1025];
-    let coors = [[80.21176, 13.076949], [80.207536,13.07702]];
 
     
     let icon = new Icon({
