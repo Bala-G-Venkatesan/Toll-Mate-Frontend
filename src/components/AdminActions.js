@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef} from 'react'
+import React, { useEffect, useState } from 'react'
 import allTollGates from '../utils/data'
 import { useDispatch, useSelector } from 'react-redux';
-import { createToll } from '../slices/TollSlice';
 
 const AdminActions = () => {
 
